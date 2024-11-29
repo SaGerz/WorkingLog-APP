@@ -1,6 +1,6 @@
 const db = require('../Models/db');
 
-const createTask = (req, res) => {
+const createTask = async (req, res) => {
     const { task_name, description, start_time, end_time, employee_id } = req.body;
 
     if(!task_name || !description || !start_time || !end_time || !employee_id) {
@@ -10,17 +10,24 @@ const createTask = (req, res) => {
     const query = `
     INSERT INTO task(task_name, description, start_time, end_time, employee_id) VALUES (?, ?, ?, ?, ?)
     `;
-
-    db.query(query, [task_name, description, start_time, end_time, employee_id], (err, result) => {
-        if(err){
-            return res.status(500).json({message: 'Gsgal menambahkan task', error: err})
-        } 
-
+    try {
+        const [result] = await db.query(query, [task_name, description, start_time, end_time, employee_id]);
         res.status(201).json({message: "Task berhasil ditambahkan", taskId: result.insertId});
-    })
+    } catch (error) {
+        return res.status(500).json({message: 'Gsgal menambahkan task', error: err})
+    }
+
+    
+    // db.query(query, [task_name, description, start_time, end_time, employee_id], (err, result) => {
+    //     if(err){
+    //         return res.status(500).json({message: 'Gsgal menambahkan task', error: err})
+    //     } 
+
+    //     res.status(201).json({message: "Task berhasil ditambahkan", taskId: result.insertId});
+    // })
 }
 
-const getTaskByEmployee = (req, res) => {
+const getTaskByEmployee = async (req, res) => {
     const {employee_id} = req.params;
 
     if(!employee_id){
@@ -29,13 +36,20 @@ const getTaskByEmployee = (req, res) => {
 
     const query = `SELECT * FROM task WHERE employee_id = ?`;
 
-    db.query(query, [employee_id], (err, result) => {
-        if(err){
-            res.status(500).json({message: 'Gagal Mengambil task', error: err});
-        }
-
+    try {
+        const [result] = await db.query(query, [employee_id])
         res.status(200).json({tasks: result});
-    });
+    } catch (error) {
+        res.status(500).json({message: 'Gagal Mengambil task', error: err});
+    }
+
+    // db.query(query, [employee_id], (err, result) => {
+    //     if(err){
+    //         res.status(500).json({message: 'Gagal Mengambil task', error: err});
+    //     }
+
+    //     res.status(200).json({tasks: result});
+    // });
 }
 
 module.exports = {createTask, getTaskByEmployee}

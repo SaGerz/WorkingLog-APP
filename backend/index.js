@@ -1,5 +1,6 @@
 require('dotenv').config({path:'./.env'});
 const express = require('express');
+const authroutes = require('./Routes/authRoutes');
 const taskRoutes = require('./Routes/taskRoutes');
 const app = express();
 const bodyParser = require('body-parser');
@@ -13,7 +14,9 @@ const port = 5000;
 // })
 
 app.use(bodyParser.json());
-app.use('/api', taskRoutes)
+
+app.use('/auth', authroutes);
+app.use('/api', taskRoutes);
 
 app.listen(port, () => {
     console.log(`Example app was run on port ${port}`)
