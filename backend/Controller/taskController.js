@@ -16,7 +16,7 @@ const createTask = async (req, res) => {
         const [result] = await db.query(query, [task_name, description, start_time, end_time, employeeId]);
         res.status(201).json({message: "Task berhasil ditambahkan", taskId: result.insertId});
     } catch (error) {
-        return res.status(500).json({message: 'Gsgal menambahkan task', error: err})
+        return res.status(500).json({message: 'Gsgal menambahkan task', error})
     }
 }
 
@@ -29,7 +29,7 @@ const getTaskByEmployee = async (req, res) => {
 
         res.status(200).json({tasks: results});
     } catch (error) {
-        res.status(500).json({message: 'Gagal Mengambil task', error: err});
+        res.status(500).json({message: 'Gagal Mengambil task', error});
     }
 }
 
