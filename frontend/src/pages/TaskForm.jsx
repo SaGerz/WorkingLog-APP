@@ -1,4 +1,6 @@
-import React, {useState} from 'react'
+import React, {useState} from 'react';
+import { useNavigate } from 'react-router-dom';
+
 
 const TaskForm = () => {
     const [taskName, setTaskName] = useState('');
@@ -6,9 +8,47 @@ const TaskForm = () => {
     const [startTime, setStartTime] = useState('');
     const [endTime, setEndTime] = useState('');
 
-    const handleSubmit = (e) => {
+    const navigate = useNavigate();
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log({taskName, description, startTime, endTime});
+        // console.log({taskName, description, startTime, endTime});
+
+        try {
+            const token = localStorage.getItem('token');
+            if(!token) {
+                alert('You Have to login First');
+                navigate('/login');
+            } 
+    
+            const response = await fetch('http://localhost:5000/api/tasks', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    task_name: taskName, 
+                    description: description, 
+                    start_time: startTime, 
+                    end_time: endTime
+                })
+            })
+    
+            const data = response.json();
+            if(response.ok){
+                alert('Task created successfully');
+                navigate('/TaskList');
+                setTaskName('');
+                setDescription('');
+                setStartTime('');
+                setEndTime('');
+            } else {
+                alert(data.message || "Failed to create task")
+            }
+        } catch (error) {
+            console.log('Error : ', error );
+        }
     }
 
     return (
