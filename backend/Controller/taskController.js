@@ -27,7 +27,7 @@ const getTaskByEmployee = async (req, res) => {
         const query = `SELECT * FROM task WHERE employee_id = ?`;
         const [results] = await db.query(query, [employeeId]);
 
-        res.status(200).json({tasks: results});
+        res.status(200).json(results);
     } catch (error) {
         res.status(500).json({message: 'Gagal Mengambil task', error});
     }
