@@ -1,26 +1,32 @@
 import React, { useEffect, useState } from 'react'
 import formatTime from '../utils/FormatTime';
 import TaxItem from '../components/TaksItem'
+import { useNavigate } from 'react-router-dom';
+import AxiosInstance from '../utils/AxiosInstance';
 
 const TaskList = () => {
   const [tasks, setTasks] = useState([]);
+  const navigate = useNavigate();
+  // const token = localStorage.getItem('token');
 
   const fetchDataTasks = async () => {
     try {
-      const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:5000/api/tasks', {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      })
+      // if(!token) {
+      //   alert('U Have to Login first');
+      //   navigate("/Login");  
+      // }
+      
+      const response = await AxiosInstance.get('/tasks');
 
-      if(response.ok){
-        const data = await response.json();
-        setTasks(data);
+      if(response.data){
+        setTasks(response.data);
       } else {
         console.error('Failed to fetch Data');
       }
     } catch (error) {
+      if(error.response.status === 401) {
+        navigate("/Login");
+      }
         console.error('Error Fetching task : ', error);
     }
 
@@ -37,20 +43,6 @@ const TaskList = () => {
                 {tasks.length === 0 ? 
                   <p>No task Available, Create one!</p> 
                     :          
-                  // <ul className="space-y-4">
-                  //   {tasks.map((task) => (
-                  //         <li key={task.id} className="p-4 bg-white shadow-md rounded-md">
-                  //             <h3 className="text-lg font-bold">{task.task_name}</h3>
-                  //             <p className="text-sm text-gray-600">{task.description}</p>
-                  //             <p className="text-sm text-gray-500">
-                  //                 Start: {formatTime(task.start_time)}
-                  //             </p>
-                  //             <p className="text-sm text-gray-500">
-                  //                 End: {formatTime(task.end_time)}
-                  //             </p>
-                  //         </li>
-                  //   ))}
-                  // </ul>
                   tasks.map(task  => (
                     <TaxItem key={task.id} task={task}/>
                   ))
@@ -59,4 +51,4 @@ const TaskList = () => {
   )
 }
 
-export default TaskList
+export default TaskList;

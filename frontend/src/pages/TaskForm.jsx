@@ -1,18 +1,29 @@
 import React, {useState} from 'react';
 import { useNavigate } from 'react-router-dom';
+import AxiosInstance from '../utils/AxiosInstance';
 
 
 const TaskForm = () => {
-    const [taskName, setTaskName] = useState('');
-    const [description, setDescription] = useState('');
-    const [startTime, setStartTime] = useState('');
-    const [endTime, setEndTime] = useState('');
+
+    const [taskData, setTaskData] = useState({
+        task_name: '',
+        description: '',
+        start_time: '',
+        end_time: ''
+    })
 
     const navigate = useNavigate();
 
+    const handleChage = (e) => {
+        e.preventDefault();
+        setTaskData({
+            ...taskData,
+            [e.target.name]: e.target.value
+        })
+    }
+
     const handleSubmit = async (e) => {
         e.preventDefault();
-        // console.log({taskName, description, startTime, endTime});
 
         try {
             const token = localStorage.getItem('token');
@@ -20,29 +31,13 @@ const TaskForm = () => {
                 alert('You Have to login First');
                 navigate('/login');
             } 
-    
-            const response = await fetch('http://localhost:5000/api/tasks', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
-                body: JSON.stringify({
-                    task_name: taskName, 
-                    description: description, 
-                    start_time: startTime, 
-                    end_time: endTime
-                })
-            })
-    
-            const data = response.json();
-            if(response.ok){
+
+            const response = await AxiosInstance.post('/tasks', taskData)
+            const data = response.data;
+            if(data){
                 alert('Task created successfully');
                 navigate('/TaskList');
-                setTaskName('');
-                setDescription('');
-                setStartTime('');
-                setEndTime('');
+                setTaskData({ task_name: '', description: '', start_time: '', end_time: '' });
             } else {
                 alert(data.message || "Failed to create task")
             }
@@ -59,8 +54,9 @@ const TaskForm = () => {
                     <label className="block text-sm font-medium text-gray-700">Task Name</label>
                     <input 
                         type="text"  
-                        value={taskName}
-                        onChange={(e) => setTaskName(e.target.value)}
+                        name='task_name'
+                        value={taskData.task_name}
+                        onChange={handleChage}
                         className="mt-1 block w-full p-2 border border-gray-300 rounded-md" 
                         required />
                 </div>
@@ -68,8 +64,9 @@ const TaskForm = () => {
                     <label className="block text-sm font-medium text-gray-700">Description</label>
                     <textarea
                         className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
-                        value={description}
-                        onChange={(e) => setDescription(e.target.value)}
+                        name='description'
+                        value={taskData.description}
+                        onChange={handleChage}
                         rows="3"
                         required
                     />
@@ -78,8 +75,9 @@ const TaskForm = () => {
                     <label className="block text-sm font-medium text-gray-700">Start Time</label>
                     <input
                         type="time"
-                        value={startTime}
-                        onChange={(e) => setStartTime(e.target.value)}
+                        name='start_time'
+                        value={taskData.start_time}
+                        onChange={handleChage}
                         className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
                         required
                     />
@@ -88,8 +86,9 @@ const TaskForm = () => {
                     <label className="block text-sm font-medium text-gray-700">End Time</label>
                     <input
                         type="time"
-                        value={endTime}
-                        onChange={(e) => setEndTime(e.target.value)}
+                        name='end_time'
+                        value={taskData.end_time}
+                        onChange={handleChage}
                         className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
                         required
                     />
