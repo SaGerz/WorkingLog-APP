@@ -61,6 +61,12 @@ const LoginForm = () => {
                 <button type="submit" className="w-full p-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">
                     Login
                 </button>
+                <p className="text-sm text-gray-500 mt-4 text-center">
+                    Belum punya account?{" "}
+                    <a href="/Register" className="text-blue-500 hover:underline">
+                        Register here
+                    </a>
+                </p>
             </form>
         </div>
     );

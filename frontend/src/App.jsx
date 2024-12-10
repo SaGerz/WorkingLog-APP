@@ -4,11 +4,13 @@ import { Route, Routes } from 'react-router-dom'
 import TaskForm from './pages/TaskForm'
 import TaskList from './pages/TaskList'
 import LoginForm from './pages/LoginForm'
+import Register from './pages/RegisterForm'
 
 function App() {
 
   return (
     <Routes>
+      <Route path='/Register' element={<Register />}/>
       <Route path='/Login' element={<LoginForm />}/>
       <Route path='/TaskForm' element={<TaskForm />}/>
       <Route path='/TaskList' element={<TaskList />}/>
