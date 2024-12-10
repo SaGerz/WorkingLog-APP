@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import formatTime from '../utils/FormatTime';
-
+import TaxItem from '../components/TaksItem'
 
 const TaskList = () => {
   const [tasks, setTasks] = useState([]);
@@ -37,20 +37,23 @@ const TaskList = () => {
                 {tasks.length === 0 ? 
                   <p>No task Available, Create one!</p> 
                     :          
-                  <ul className="space-y-4">
-                    {tasks.map((task) => (
-                          <li key={task.id} className="p-4 bg-white shadow-md rounded-md">
-                              <h3 className="text-lg font-bold">{task.task_name}</h3>
-                              <p className="text-sm text-gray-600">{task.description}</p>
-                              <p className="text-sm text-gray-500">
-                                  Start: {formatTime(task.start_time)}
-                              </p>
-                              <p className="text-sm text-gray-500">
-                                  End: {formatTime(task.end_time)}
-                              </p>
-                          </li>
-                    ))}
-                  </ul>
+                  // <ul className="space-y-4">
+                  //   {tasks.map((task) => (
+                  //         <li key={task.id} className="p-4 bg-white shadow-md rounded-md">
+                  //             <h3 className="text-lg font-bold">{task.task_name}</h3>
+                  //             <p className="text-sm text-gray-600">{task.description}</p>
+                  //             <p className="text-sm text-gray-500">
+                  //                 Start: {formatTime(task.start_time)}
+                  //             </p>
+                  //             <p className="text-sm text-gray-500">
+                  //                 End: {formatTime(task.end_time)}
+                  //             </p>
+                  //         </li>
+                  //   ))}
+                  // </ul>
+                  tasks.map(task  => (
+                    <TaxItem key={task.id} task={task}/>
+                  ))
                 }
         </div>
   )
