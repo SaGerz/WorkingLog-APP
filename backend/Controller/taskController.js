@@ -33,6 +33,24 @@ const getTaskByEmployee = async (req, res) => {
     }
 }
 
+const getTaskById = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { employeeId } = req.user;
+
+        const query = `SELECT * FROM task WHERE id = ? AND employee_id = ?`;
+        const [result] = await db.query(query, [id, employeeId]);
+
+        if(result.length === 0) {
+            return res.status(404).json({message: "Task tidak dapat ditemukan atau bukan milik anda"});
+        } 
+
+        res.status(200).json({result});
+    } catch (error) {
+        res.status(500).json({ message: 'Gagal mengambil task', error });
+    }
+}
+
 const updateTaskByEmployee = async (req, res) => {
     const { id } = req.params;
     const { task_name, description, start_time, end_time } = req.body;
@@ -84,4 +102,4 @@ const deleteTask = async (req, res) => {
 
 }
 
-module.exports = {createTask, getTaskByEmployee, updateTaskByEmployee, deleteTask}
+module.exports = {createTask, getTaskByEmployee, getTaskById, updateTaskByEmployee, deleteTask}
