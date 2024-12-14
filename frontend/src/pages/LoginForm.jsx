@@ -23,7 +23,7 @@ const LoginForm = () => {
 
             if(data.token){
                 localStorage.setItem('token', data.token);
-                navigate('/TaskForm');
+                navigate('/TaskList');
             } else {
                 alert(data.message);
                 setEmail('');

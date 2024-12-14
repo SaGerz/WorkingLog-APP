@@ -6,6 +6,7 @@ import TaskList from './pages/TaskList'
 import LoginForm from './pages/LoginForm'
 import Register from './pages/RegisterForm'
 import HomeRedirect from './pages/HomeRedirect'
+import TaskUpdate from './pages/TaskUpdate'
 
 function App() {
 
@@ -16,6 +17,7 @@ function App() {
       <Route path='/Login' element={<LoginForm />}/>
       <Route path='/TaskForm' element={<TaskForm />}/>
       <Route path='/TaskList' element={<TaskList />}/>
+      <Route path='/Task-Update/:id' element={<TaskUpdate />}/>
     </Routes>    
   )
 }
