@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import formatTime from '../utils/FormatTime';
-import TaxItem from '../components/TaksItem'
+import TaskItem from '../components/TaskItem'
 import { useNavigate } from 'react-router-dom';
 import AxiosInstance from '../utils/AxiosInstance';
 
@@ -44,9 +44,14 @@ const TaskList = () => {
                   <p>No task Available, Create one!</p> 
                     :          
                   tasks.map(task  => (
-                    <TaxItem key={task.id} task={task}/>
+                    <TaskItem key={task.id} task={task}/>
                   ))
                 }
+            <div className='mt-2'>
+              <button onClick={() => {navigate("/TaskForm")}} className="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 transition" >
+                  Add New Task
+              </button>
+            </div>
         </div>
   )
 }
