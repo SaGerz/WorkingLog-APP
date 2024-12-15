@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import formatTime from "../utils/FormatTime";
 
-const TaxItem = ({task}) => {
+const TaxItem = ({task, handleDelete}) => {
     const navigate = useNavigate();
     const handleUpdateNavigate = () => {
         navigate(`/Task-Update/${task.id}`)
@@ -19,7 +19,7 @@ const TaxItem = ({task}) => {
                     <button onClick={handleUpdateNavigate} className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition" >
                             Update
                     </button>
-                    <button className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition" >
+                    <button onClick={() => handleDelete(task.id) } className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition" >
                             Delete
                     </button>
                 </div>

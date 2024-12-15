@@ -32,6 +32,22 @@ const TaskList = () => {
 
   }
 
+  const handleDelete = async (id) => {
+    const confirmDelete = window.confirm("Apa kamu yakin ingin menghapus task ini?");
+    if(!confirmDelete) return ;
+
+    try {
+      const response = await AxiosInstance.delete(`tasks/${id}`);
+      if(response.status === 200) {
+        alert('Data Berhasil Dihapus');
+        setTasks((prevTasks => prevTasks.filter(task => task.id !== id)))
+      }
+    } catch (error) {
+        console.log("Error deleting data task : ", error);
+        alert("Gagal menghapus data");
+    }
+  }
+
   useEffect(() => {
     fetchDataTasks();
   }, [])
@@ -44,7 +60,7 @@ const TaskList = () => {
                   <p>No task Available, Create one!</p> 
                     :          
                   tasks.map(task  => (
-                    <TaskItem key={task.id} task={task}/>
+                    <TaskItem key={task.id} task={task} handleDelete={handleDelete} />
                   ))
                 }
             <div className='mt-2'>
