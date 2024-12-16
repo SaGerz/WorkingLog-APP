@@ -1,19 +1,25 @@
 const db = require('../Models/db');
 
 const createTask = async (req, res) => {
-    const { task_name, description, start_time, end_time } = req.body;
+    const { task_name, description, start_time, end_time, status } = req.body;
 
-    if(!task_name || !description || !start_time || !end_time ) {
+    if(!task_name || !description || !start_time || !end_time || !status ) {
         return res.status(400).json({message: 'Semua data wajib diisi'});
     }
+
+    const validStatus = ["On Process", "Done"];
+    if(!validStatus.includes(status)){
+        return res.status(500).json({message : "Status tidak valid. Pilihan: On Process atau Done" });
+    }
+
     try {
         const {employeeId} = req.user;
         console.log(employeeId);
         const query = `
-        INSERT INTO task(task_name, description, start_time, end_time, employee_id) VALUES (?, ?, ?, ?, ?)
+        INSERT INTO task(task_name, description, start_time, end_time, employee_id, status) VALUES (?, ?, ?, ?, ?, ?)
         `;
 
-        const [result] = await db.query(query, [task_name, description, start_time, end_time, employeeId]);
+        const [result] = await db.query(query, [task_name, description, start_time, end_time, employeeId, status]);
         res.status(201).json({message: "Task berhasil ditambahkan", taskId: result.insertId});
     } catch (error) {
         return res.status(500).json({message: 'Gsgal menambahkan task', error})
@@ -24,7 +30,7 @@ const getTaskByEmployee = async (req, res) => {
     try {
         const {employeeId} = req.user;
 
-        const query = `SELECT * FROM task WHERE employee_id = ?`;
+        const query = `SELECT * FROM task WHERE employee_id = ? ORDER BY created_at DESC`;
         const [results] = await db.query(query, [employeeId]);
 
         res.status(200).json(results);
@@ -53,10 +59,10 @@ const getTaskById = async (req, res) => {
 
 const updateTaskByEmployee = async (req, res) => {
     const { id } = req.params;
-    const { task_name, description, start_time, end_time } = req.body;
+    const { task_name, description, start_time, end_time, status } = req.body;
 
     try {
-        if(!task_name || !description || !start_time || !end_time){
+        if(!task_name || !description || !start_time || !end_time || !status){
             return res.status(400).json({message: "Semua data wajib diisi!"});
         }
 
@@ -69,8 +75,8 @@ const updateTaskByEmployee = async (req, res) => {
             return res.status(404).json({message: "Task tidak ditemukan atau tidak memiliki Akses"});
         }
 
-        const updateQuery = `UPDATE task SET task_name = ?, description = ?, start_time = ?, end_time = ? WHERE id = ? AND employee_id = ?`
-        await db.query(updateQuery, [task_name, description, start_time, end_time, id, employeeId]);
+        const updateQuery = `UPDATE task SET task_name = ?, description = ?, start_time = ?, end_time = ?, status = ? WHERE id = ? AND employee_id = ?`
+        await db.query(updateQuery, [task_name, description, start_time, end_time, status, id, employeeId]);
         res.status(200).json({ message: 'Task berhasil diperbarui' });
 
     } catch (error) {
