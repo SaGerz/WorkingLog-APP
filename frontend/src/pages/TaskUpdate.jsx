@@ -11,6 +11,7 @@ const TaskUpdate = () => {
         description: '',
         start_time: '',
         end_time: '',
+        status: 'On Process'
     });
 
     useEffect(() => {
@@ -30,6 +31,7 @@ const TaskUpdate = () => {
                         description: result.description,
                         start_time: result.start_time,
                         end_time: result.end_time,
+                        status: result.status
                     });
             } else {
                 console.error('Fetch Data by ID Failed');
@@ -129,6 +131,19 @@ const TaskUpdate = () => {
                         className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
                         required
                     />
+                </div>
+                <div className="mb-4">
+                    <label className="block text-sm font-medium text-gray-700">Status</label>
+                    <select
+                        name='status'
+                        value={formData.status}
+                        onChange={handleChage}
+                        className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
+                        required
+                    >
+                        <option value="On Process">On Process</option>
+                        <option value="Done">Done</option>
+                    </select>
                 </div>
                 <button
                     type="submit"

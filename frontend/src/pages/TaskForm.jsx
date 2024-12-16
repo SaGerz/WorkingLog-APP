@@ -9,7 +9,8 @@ const TaskForm = () => {
         task_name: '',
         description: '',
         start_time: '',
-        end_time: ''
+        end_time: '',
+        status: 'On Process'
     })
 
     const navigate = useNavigate();
@@ -37,7 +38,7 @@ const TaskForm = () => {
             if(data){
                 alert('Task created successfully');
                 navigate('/TaskList');
-                setTaskData({ task_name: '', description: '', start_time: '', end_time: '' });
+                setTaskData({ task_name: '', description: '', start_time: '', end_time: '', status: 'On Process' });
             } else {
                 alert(data.message || "Failed to create task")
             }
@@ -92,6 +93,19 @@ const TaskForm = () => {
                         className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
                         required
                     />
+                </div>
+                <div className="mb-4">
+                    <label className="block text-sm font-medium text-gray-700">Status</label>
+                    <select
+                        name='status'
+                        value={taskData.status}
+                        onChange={handleChage}
+                        className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
+                        required
+                    >
+                        <option value="On Process">On Process</option>
+                        <option value="Done">Done</option>
+                    </select>
                 </div>
             <button type="submit" className="w-full p-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">
             Save Task
