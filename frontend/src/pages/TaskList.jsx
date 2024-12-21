@@ -6,6 +6,7 @@ import AxiosInstance from '../utils/AxiosInstance';
 
 const TaskList = () => {
   const [tasks, setTasks] = useState([]);
+  const [filter, setFilter] = useState("All");
   const navigate = useNavigate();
   // const token = localStorage.getItem('token');
 
@@ -32,6 +33,16 @@ const TaskList = () => {
 
   }
 
+  const handleFilterChange = (e) => {
+    e.preventDefault();
+    setFilter(e.target.value);
+  }
+
+  const filteredTask = tasks.filter((task) => {
+    if(filter === "All") return true;
+    return task.status === filter;
+  })
+
   const handleDelete = async (id) => {
     const confirmDelete = window.confirm("Apa kamu yakin ingin menghapus task ini?");
     if(!confirmDelete) return ;
@@ -56,18 +67,23 @@ const TaskList = () => {
   return (
     <div className="max-w-4xl mx-auto p-4">
             <h2 className="text-2xl font-bold mb-4">Working History</h2>
-                {tasks.length === 0 ? 
-                  <p>No task Available, Create one!</p> 
-                    :          
-                  tasks.map(task  => (
-                    <TaskItem key={task.id} task={task} handleDelete={handleDelete} />
-                  ))
-                }
-            <div className='mt-2'>
+            <div className='mt-2 flex space-x-4'>
+              <select value={filter} onChange={handleFilterChange} className="border border-gray-300 rounded-md p-2">
+                <option value="All">All</option>
+                <option value="On Process">On Proccess</option>
+                <option value="Done">Done</option>
+              </select>
+
               <button onClick={() => {navigate("/TaskForm")}} className="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 transition" >
                   Add New Task
               </button>
             </div>
+                {
+                  filteredTask.map((taskFilter) => (
+                    <TaskItem key={taskFilter.id} task={taskFilter} handleDelete={handleDelete} />
+                  ))
+                }
+         
         </div>
   )
 }
