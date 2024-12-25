@@ -9,7 +9,6 @@ const LoginForm = () => {
     const handleLoginSubmit = async (e) => {
         e.preventDefault();
         try {
-            console.log({email, password});
             const response = await fetch('http://localhost:5000/auth/login', {
                 method: 'POST',
                 headers: {

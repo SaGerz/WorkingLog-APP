@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import formatTime from "../utils/FormatTime";
+import FormatTime from "../utils/FormatTime";
 import { format } from "date-fns"
 
 const TaxItem = ({task, handleDelete}) => {
@@ -14,7 +14,7 @@ const TaxItem = ({task, handleDelete}) => {
                 <h3 className="text-lg font-bold">{task.task_name}</h3>
                 <p className="text-sm text-gray-600 mb-2">{task.description}</p>
                 <p className="text-sm text-gray-500">
-                    Start: {formatTime(task.start_time)} - End: {formatTime(task.end_time)}
+                    Start: {FormatTime.formatTime(task.start_time)} - End: {FormatTime.formatTime(task.end_time)}
                 </p>
                 <p className="text-sm text-gray-500 mb-2">Created At: {format(new Date(task.created_at), 'dd MMMM yyyy')}</p>
                 <p className="text-sm font-medium">

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
-import formatTime from '../utils/FormatTime';
+// import {formatTime} from '../utils/FormatTime';
+import FormatTime from '../utils/FormatTime';
 import TaskItem from '../components/TaskItem'
 import { useNavigate } from 'react-router-dom';
 import AxiosInstance from '../utils/AxiosInstance';
@@ -28,7 +29,7 @@ const TaskList = () => {
       if(error.response.status === 401) {
         navigate("/Login");
       }
-        console.error('Error Fetching task : ', error);
+        // console.error('Error Fetching task : ', error);
     }
 
   }
@@ -42,6 +43,16 @@ const TaskList = () => {
     if(filter === "All") return true;
     return task.status === filter;
   })
+
+  const groupedTasksByDate = filteredTask.reduce((grouped, task) => {
+    // Ambil tanggal saja dari created_at, buang waktu
+    const taskDate = new Date(task.created_at).toLocaleDateString();
+    if (!grouped[taskDate]) {
+      grouped[taskDate] = [];
+    }
+    grouped[taskDate].push(task);
+    return grouped;
+  }, {});
 
   const handleDelete = async (id) => {
     const confirmDelete = window.confirm("Apa kamu yakin ingin menghapus task ini?");
@@ -68,22 +79,26 @@ const TaskList = () => {
     <div className="max-w-4xl mx-auto p-4">
             <h2 className="text-2xl font-bold mb-4">Working History</h2>
             <div className='mt-2 flex space-x-4'>
-              <select value={filter} onChange={handleFilterChange} className="border border-gray-300 rounded-md p-2">
+              <select value={filter} onChange={handleFilterChange} className="border border-gray-300 rounded-md mb-3 p-2">
                 <option value="All">All</option>
                 <option value="On Process">On Proccess</option>
                 <option value="Done">Done</option>
               </select>
 
-              <button onClick={() => {navigate("/TaskForm")}} className="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 transition" >
+              <button onClick={() => {navigate("/TaskForm")}} className="px-4 py-2 bg-green-500 text-white rounded-md mb-3 hover:bg-green-600 transition" >
                   Add New Task
               </button>
             </div>
-                {
-                  filteredTask.map((taskFilter) => (
-                    <TaskItem key={taskFilter.id} task={taskFilter} handleDelete={handleDelete} />
-                  ))
-                }
-         
+              {Object.entries(groupedTasksByDate).map(([date, tasks]) => (
+                <div key={date} className="mb-6">
+                  <h3 className="text-lg font-semibold mb-2">{FormatTime.formatDate(date)}</h3>
+                  <div className="space-y-2">
+                    {tasks.map(task => (
+                      <TaskItem key={task.id} task={task} handleDelete={handleDelete} />
+                    ))}
+                  </div>
+                </div>
+              ))}
         </div>
   )
 }
