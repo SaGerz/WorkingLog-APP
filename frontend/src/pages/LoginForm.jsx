@@ -1,9 +1,13 @@
 import React, {useState} from 'react'
 import { useNavigate } from 'react-router-dom';
+import { Alert } from "flowbite-react";
+import { HiInformationCircle } from "react-icons/hi";
+
 
 const LoginForm = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [loginStat, setLoginStat] = useState(null);
     const navigate = useNavigate();
 
     const handleLoginSubmit = async (e) => {
@@ -22,9 +26,13 @@ const LoginForm = () => {
 
             if(data.token){
                 localStorage.setItem('token', data.token);
-                navigate('/TaskList');
+                setLoginStat('success');
+                setTimeout(() => {
+                    navigate('/TaskList');
+                }, 1000);
             } else {
-                alert(data.message);
+                // alert(data.message);
+                setLoginStat('Failed');
                 setEmail('');
                 setPassword('');
             }
@@ -34,7 +42,25 @@ const LoginForm = () => {
     }
 
     return (
-            <div className="max-w-lg mx-auto bg-white p-6 rounded-md shadow-md mt-6">
+        <div className="max-w-lg mx-auto bg-white p-6 rounded-md shadow-md mt-6">
+                {
+                    loginStat === 'success' && 
+                    (
+                        <Alert color="success" onDismiss={() => setLoginStat(null)} className='mb-3'>
+                            <span className="font-medium">Login Succes!</span> 
+                        </Alert>
+                    )
+                }
+    
+                {
+                    loginStat === 'Failed' && 
+                    (
+                        <Alert color="failure" icon={HiInformationCircle} className='mb-3'>
+                            <span className="font-medium">Login Gagal!</span>
+                        </Alert>
+                    )
+                }
+
             <h2 className="text-2xl font-semibold mb-4">Login</h2>
             <form onSubmit={handleLoginSubmit} >
                 <div className="mb-4">
