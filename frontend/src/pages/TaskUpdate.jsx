@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import AxiosInstance from '../utils/AxiosInstance';
+import { AiOutlineClockCircle } from "react-icons/ai";
+
 
 const TaskUpdate = () => {
     const { id } = useParams(); // Ambil ID dari URL
@@ -112,25 +114,39 @@ const TaskUpdate = () => {
                 </div>
                 <div className="mb-4">
                     <label className="block text-sm font-medium text-gray-700">Start Time</label>
-                    <input
-                        type="time"
-                        name="start_time"
-                        value={formData.start_time}
-                        onChange={handleChage}
-                        className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
-                        required
-                    />
+                    <div className="relative">
+                        <input
+                            type="time"
+                            name="start_time"
+                            value={formData.start_time}
+                            onChange={handleChage}
+                            className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
+                            id='timeInputUpdate_StartTime'
+                            required
+                        />
+                        <AiOutlineClockCircle 
+                            className="absolute inset-y-2 right-3 flex items-center text-gray-500 cursor-pointer hover:text-gray-700"
+                            size={25} onClick={() => document.getElementById('timeInputUpdate_StartTime').showPicker()}
+                        />
+                    </div>
                 </div>
                 <div className="mb-4">
                     <label className="block text-sm font-medium text-gray-700">End Time</label>
-                    <input
-                        type="time"
-                        name="end_time"
-                        value={formData.end_time}
-                        onChange={handleChage}
-                        className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
-                        required
-                    />
+                    <div className="relative">
+                        <input
+                            type="time"
+                            name="end_time"
+                            value={formData.end_time}
+                            onChange={handleChage}
+                            className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
+                            id='timeInputUpdate_EndTime'
+                            required
+                        />
+                        <AiOutlineClockCircle 
+                                className="absolute inset-y-2 right-3 flex items-center text-gray-500 cursor-pointer hover:text-gray-700"
+                                size={25} onClick={() => document.getElementById('timeInputUpdate_EndTime').showPicker()}
+                        />
+                    </div>
                 </div>
                 <div className="mb-4">
                     <label className="block text-sm font-medium text-gray-700">Status</label>
