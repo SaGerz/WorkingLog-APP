@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import { useNavigate } from 'react-router-dom';
 import AxiosInstance from '../utils/AxiosInstance';
 import { AiOutlineClockCircle } from "react-icons/ai";
-
+import {toast} from 'react-toastify';
 
 const TaskForm = () => {
 
@@ -37,11 +37,23 @@ const TaskForm = () => {
             const response = await AxiosInstance.post('/tasks', taskData)
             const data = response.data;
             if(data){
-                alert('Task created successfully');
+                toast.success('Task created succesfully',
+                    {
+                        position: "top-right",
+                        autoClose: 5000,
+                        hideProgressBar: false,
+                        closeOnClick: false,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: "light",
+                    });
+                // alert('Task created successfully');
                 navigate('/TaskList');
                 setTaskData({ task_name: '', description: '', start_time: '', end_time: '', status: 'On Process' });
             } else {
-                alert(data.message || "Failed to create task")
+                toast.error(data.message || 'Failed to create task');
+                // alert(data.message || "Failed to create task")
             }
         } catch (error) {
             console.log('Error : ', error );

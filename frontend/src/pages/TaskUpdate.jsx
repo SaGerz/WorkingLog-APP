@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import AxiosInstance from '../utils/AxiosInstance';
 import { AiOutlineClockCircle } from "react-icons/ai";
-
+import { toast } from 'react-toastify';
 
 const TaskUpdate = () => {
     const { id } = useParams(); // Ambil ID dari URL
@@ -71,10 +71,22 @@ const TaskUpdate = () => {
             const data = response.data;
 
             if (data) {
-                alert('Task updated successfully');
+                toast.success('Task Update succesfully',
+                    {
+                        position: "top-right",
+                        autoClose: 5000,
+                        hideProgressBar: false,
+                        closeOnClick: false,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: "light",
+                    });
+                // alert('Task updated successfully');
                 navigate('/TaskList');
             } else {
-                alert(data.message || 'Failed to update task');
+                toast.error(data.message || 'Failed to update task');
+                // alert(data.message || 'Failed to update task');
             }
         } catch (error) {
             console.error('Error updating task:', error);
