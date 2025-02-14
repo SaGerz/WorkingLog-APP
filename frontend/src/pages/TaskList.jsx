@@ -8,6 +8,8 @@ import AxiosInstance from '../utils/AxiosInstance';
 const TaskList = () => {
   const [tasks, setTasks] = useState([]);
   const [filter, setFilter] = useState("All");
+  const [searchTerm, setSearchTerm] = useState('');
+
   const navigate = useNavigate();
   // const token = localStorage.getItem('token');
 
@@ -39,9 +41,20 @@ const TaskList = () => {
     setFilter(e.target.value);
   }
 
+  // const filteredTask = tasks.filter((task) => {
+  //   if(filter === "All") return true;
+  //   return task.status === filter;
+  // })
+
   const filteredTask = tasks.filter((task) => {
-    if(filter === "All") return true;
-    return task.status === filter;
+    const statusMatch = filter === "All" || task.status === filter;
+
+    const searchMatch = 
+      searchTerm === '' || 
+      task.task_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      task.description.toLowerCase().includes(searchTerm.toLocaleLowerCase())
+
+    return statusMatch && searchMatch;
   })
 
   const groupedTasksByDate = filteredTask.reduce((grouped, task) => {
@@ -84,6 +97,13 @@ const TaskList = () => {
                 <option value="On Process">On Proccess</option>
                 <option value="Done">Done</option>
               </select>
+              <input 
+                type="text" 
+                placeholder="Search task..." 
+                value={searchTerm} 
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="border border-gray-300 rounded-md mb-3"
+              />
 
               <button onClick={() => {navigate("/TaskForm")}} className="px-4 py-2 bg-green-500 text-white rounded-md mb-3 hover:bg-green-600 transition" >
                   Add New Task
